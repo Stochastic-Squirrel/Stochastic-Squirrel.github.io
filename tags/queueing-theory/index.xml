@@ -16,9 +16,8 @@
       <pubDate>Tue, 17 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/call-center-simulation/</guid>
-      <description>#TODO: add in single observational call to budget simulation! current results reflext your call being answered not your problem being resolved
-This post will deal with how to approach a problem using simulation. Furthermore, some theory on the distribution of order statistics shall be touched on as well as some very basic Queueing Theory concepts.
-ContextSay you are trying to reach an international number. It can cost a fortune to reach an operator on the other side of the world.</description>
+      <description>This post will deal with how to approach a problem using simulation. Furthermore, some theory on the distribution of order statistics shall be touched on as well as some very basic Queueing Theory concepts.
+ContextSay you are trying to reach an international number. It can cost a fortune to reach an operator on the other side of the world. You have limited funds and you wish to simulate a call centre system to estimate how likely you are to reach an operator before you run out of money.</description>
     </item>
     
   </channel>

@@ -16,20 +16,8 @@
       <pubDate>Tue, 17 Dec 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/call-center-simulation/</guid>
-      <description>#TODO: add in single observational call to budget simulation! current results reflext your call being answered not your problem being resolved
-This post will deal with how to approach a problem using simulation. Furthermore, some theory on the distribution of order statistics shall be touched on as well as some very basic Queueing Theory concepts.
-ContextSay you are trying to reach an international number. It can cost a fortune to reach an operator on the other side of the world.</description>
-    </item>
-    
-    <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <description>This post will deal with how to approach a problem using simulation. Furthermore, some theory on the distribution of order statistics shall be touched on as well as some very basic Queueing Theory concepts.
+ContextSay you are trying to reach an international number. It can cost a fortune to reach an operator on the other side of the world. You have limited funds and you wish to simulate a call centre system to estimate how likely you are to reach an operator before you run out of money.</description>
     </item>
     
   </channel>

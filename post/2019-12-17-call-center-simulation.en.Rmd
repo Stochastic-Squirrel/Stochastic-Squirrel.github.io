@@ -29,13 +29,11 @@ call_cost_night <-  27.94
 
 ```
 
-#TODO: add in single observational call to budget simulation! current results reflext your call being answered not your problem being resolved
-
 This post will deal with how to approach a problem using simulation. Furthermore, some theory on the distribution of order statistics shall be touched on as well as some very basic Queueing Theory concepts.
 
 # Context
 
-Say you are trying to reach an international number. It can cost a fortune to reach an operator on the other side of the world. You have limited funds and you wish to simulate a call center system to estimate how likely you are to reach an operator before you run out of money.
+Say you are trying to reach an international number. It can cost a fortune to reach an operator on the other side of the world. You have limited funds and you wish to simulate a call centre system to estimate how likely you are to reach an operator before you run out of money.
 
 # Assumptions
 
@@ -43,13 +41,13 @@ It is critical to be extremely clear about the assumptions you are making when s
 
 * Presume that it is a 24/7 line , but the number of call operators differs each shift. 
 
-* Assume that the call operators' call resolution times are *homogenous* within a given shift but each shift has a different mean waiting time. For example, on average you may need to wait longer when calling at night.
+* Assume that the call operators' call resolution times are *homogeneous* within a given shift but each shift has a different mean waiting time. For example, on average you may need to wait longer when calling at night.
 
-* Assume that people who are also waiting for an operator do not leave the queue. They wait until their calls are answered. This refers to the concept of *reneging*. More on this can be found by searching for 
+* Assume that people who are also waiting for an operator do not leave the queue. They wait until their calls are answered. This refers to the concept of *reneging*.
 
 * We will also assume a 'memoryless' property to waiting in line. What this means is that if you have already been waiting $T$ minutes (say 10 minutes in line), then this does **not** affect your chances of your call being picked up within the next *t* minutes. Simply put, the amount of time you have already been waiting does not influence your chances at all of your call being picked up.
 
-put memoryless property ehre?
+
 
 <!-- Question: What strategy should you employ to *maximise the probability of reaching a call operator* given you don't use up all of your airtime? -->
 
@@ -70,7 +68,7 @@ $\lambda_{Operator}$ is the rate parameter which characterises the Exponential d
 
 # Simulation Hyperparameters
 
-Taking into account the previous two sections, we can set hyperparamers which will characterise the nature of the simulation
+Taking into account the previous two sections, we can set hyperparameters which will characterise the nature of the simulation
 
 * Number of Day operators: 3
 * Number of Night operators: 6
@@ -100,7 +98,7 @@ Variance in call resolution times at night is much higher than during the day. S
 
 **Should you call at night when the international call fees are lower with more staff on duty or should you call during the day when the calls are more expensive but the fewer staff on duty are more efficient?**
 
-<!-- Since the daytime staff are more efficient, fewer staff are on duty. Let this value be `r paste0(num_day)`. There are more nighttime staff at `r paste0(num_night)`. -->
+<!-- Since the daytime staff are more efficient, fewer staff are on duty. Let this value be `r paste0(num_day)`. There are more night-time staff at `r paste0(num_night)`. -->
 
 # Simulating Waiting Times
 
@@ -111,9 +109,9 @@ A function needs to be written to take into account:
 * The number of call operators
 * The call resolution rate of these operators
 
-This function will should return the *minimum* call resolution times for the N number of call operators. This represents the time you would have to wait if you were to stay on the line until someone was free to take your call. This shall be referred to as the "First Available" times.
+This function should return the *minimum* call resolution times for the N number of call operators. This represents the time you would have to wait if you were to stay on the line until someone was free to take your call. This shall be referred to as the "First Available" times.
 
-```{r}
+```{r, echo = TRUE}
 
 call_pickup <- function(num_operators, pickup_rate){
   
@@ -129,9 +127,6 @@ call_pickup <- function(num_operators, pickup_rate){
 Let's simulate the First Available waiting times for 10000 calls at each shift. What would be the distribution of waiting times?
 
 ```{r}
-
-par(mfrow = c(1,2))
-
 #Simulate the waiting times for each shift
 daytime_first_sim <-
   replicate(n = 10000,
@@ -140,66 +135,74 @@ daytime_first_sim <-
 night_first_sim <-
   replicate(n = 10000,
             expr = call_pickup(num_operators = num_night, pickup_rate = night_rate))
+```
 
-par(mfrow = c(2,1))
+
+```{r first_available}
+par(mfrow = c(1,2))
 density(daytime_first_sim) %>% 
-  plot(xlab = "Time Spent Waiting for First Available Operator", main = 'First Available Waiting Times',xlim = c(0,50),ylim = c(0,0.85), col = "blue")
+  plot(xlab = "Time until First Available Operator", main = 'First Available Waiting Times',xlim = c(0,50),ylim = c(0,0.85), col = "blue")
 lines(density(night_first_sim),col = "red")
 
 
 density(day_simulations) %>% 
-      plot(xlab = "Call Resolution Time in minutes", main = "Single Operator Resolution Times",xlim = c(0,50),ylim = c(0,0.4), col = "blue")
+      plot(xlab = "Call Resolution Time in minutes", main = "Call Resolution Times",xlim = c(0,50),ylim = c(0,0.4), col = "blue")
 lines(density(night_simulations), col = "red")
 legend("topright", c("Day Shift","Night Shift") ,col = c("blue","red"), lty = 1)
       
     
 ```
 
-Not surprising in that the minimum of Exponential variables is indeed an exponential distribution. We can see that the First Available waiting times are MUCH less variable now because you are waiting for the first available operator out of many. The fact that there are 3 fewer operators during the day shift compared to the night is more of a factor now. 
+Not surprising in that the minimum of Exponential variables is indeed an exponential distribution. We can see that the First Available waiting times are MUCH less variable now because you are waiting for the first available operator out of many. The difference between the First Available distributions is much smaller between shifts than the individual call resolution distributions. 
 
 # Analytically Deriving Waiting Times
 
-Not surprising in that is indeed an exponential distribution. We can see that the waiting times are MUCH less variable now because you are waiting for the first available operator out of many. The median waiting times are also lower. This is the same as simply calculating the distribution of the *Minimum* or rank 1 statistic for a vector of random variables.
+The First Available distributions is the same as simply calculating the distribution of the *Minimum* or rank 1 statistic for a sample of random variables.
 
 In fact, this could be solved analytically using some basic probability theory surrounding cumulative density functions (CDFs). The thought process is to derive a distributional expression of the probability of observing a specific $x^*$ as being the minimum value out of a sample of N data points.
 
 $\text{Cumulative Density Function(CDF)} = F(x^*) = Pr(X\leq x^*)$
 
-For it to be the minimum, we consider probability of a value being greater than $x^*$
+For it to be the minimum, we consider the probability of a value being greater than $x^*$
 
 $Pr(X\geq x^*) = 1 - F(x^*)$
 
 The above expression is the probability in which a random variable X has the same value or greater than $x^*$. For $x^*$ to be the minimum value from a sample draw of N random variables, each and every value needs to be greater than or equal to $x^*$.
 
-Probabilisticly, assuming independence:
+Probabilistically, assuming independence:
 
 $Pr(X_1, X_2 ... X_N \geq x^*)  = (1 - F(x^*))^N$
 
 $\text{In order to make the above expression into a CDF for the minimum:}$
 
-$F(x_{min}) = Pr(X\leq x^*)  = 1 - (1 - F(x^*))^N$
+$F(X_{min}) = Pr(X_{min}\leq x^*)  = 1 - (1 - F(x^*))^N$
 
 We are nearly there. The last equation above shows the **general expression** for the CDF of the minimum order statistic out of a sample of $N$ data points. Notice how no distributional assumptions were made in deriving this. In our case, the CDF for the Exponential distribution is substituted where $F(x^*)$ stands. If we were dealing with Poisson variables for example, we would just need to substitute $F(x^*)$ with the CDF of the Poisson distribution.
 
 In order to achieve the density function, we would simply differentiate the expression with respect to the random variable $x$.
 
-The density distribution for the Available Waiting times is thus:
+The density distribution for the First Available Waiting times for the day shift is thus:
 
 $t^{(1)}_{day} \sim \lambda_{day}^{2} N\left(-e^{\lambda_{day}(-t^{(1)}_{day})}\right)\left(1-\lambda_{day} e^{\lambda_{day}(-t^{(1)}_{day})}\right)^{N-1}$
 
-We won't need to use the density distribution above as we can simulate variables from the CDF using the Probabibility Inverse Transform method (PIT) method.
+We won't need to use the density distributions as we can simulate variables from the CDF of the minimum order statistic using the Probability Inverse Transform method (PIT) method.
 
 I shall skip over the explanation, but essentially variables from a desired distribution can be simulated directly through the use of uniform random variables
 
-As a sanity check, the analytical and simulated First Available waiting times are compared to show that we have indeed solved the problem analytically.
+As a sanity check, the analytical and simulated First Available waiting times are the same.
 
-```{r first_order}
+```{r, echo = TRUE}
 
 first_order_sim <- function(n,rate){
   u <- runif(n =1)
   #Probability Inverse Transform of the CDF of the Min 
   -log(1-u)/(n*rate)
 }
+
+```
+
+
+```{r first_order, fig.cap =""}
 
 analytical_first_order <- replicate(n = 10000,expr =  first_order_sim(n = num_day,rate = day_rate)) 
 
@@ -210,13 +213,17 @@ lines(density(analytical_first_order),lty = 4, col = "black")
 legend("topright", c("Simulated","Analytical"), col =c("blue","black"), lty = c(1,4))
 ```
 
+We can proceed to use the analytical result as it will be quicker to sample variables from this distribution rather than the simulation approach.
+
 # Will Anyone Answer Me?
 
-We have an explicit analytical set of solutions for the First Available times. As a remidner, our central question is to answer: 
+We have an explicit analytical set of solutions for the First Available times. As a reminder, our central question is to answer: 
 
 **Should you call at night when the international call fees are lower with more staff on duty or should you call during the day when the calls are more expensive but the fewer staff on duty are more efficient?**
 
-Under a fixed budget, let's say R50, should we phone at night or during the day? I shall simulate the scenario 10000 times and caluclate the success rates. To simplify matters, only two strategies are conisdered: phoning during the day or phoning at night.
+Under a fixed budget, let's say R50, should we phone at night or during the day? I shall simulate the scenario 10000 times and calculate the success rates. To simplify matters, only two strategies are considered: phoning during the day or phoning at night.
+
+One thing to keep in mind is that the total time spent on the phone is the sum of the First Available time and the call resolution time because you still need to discuss your issue with the operator.
 
 ```{r call_scenario, echo = TRUE}
 
@@ -230,8 +237,10 @@ call_scenario <-
 
         #Simulate When An Operator Will Be Available
         waiting_time <- first_order_sim(n = num,rate = rate)
+        #Simulate How Long it will take to resolve your issue
+        resolution_time <- rexp(n = 1, rate = rate)
         #Calculate Money Spent Waiting for Call to be answered
-        money_spent <- waiting_time * call_cost
+        money_spent <- (waiting_time + resolution_time) * call_cost
         budget <- max(0, budget - money_spent)
         
         if(budget > 0){
@@ -247,9 +256,9 @@ call_scenario <-
 
 ```
 
+The results are:
 
-
-```{r illustrative_sim, eval = F}
+```{r illustrative_sim, echo = FALSE}
 
  
 simulation_results_day <- replicate(n = 10000,
@@ -268,90 +277,73 @@ simulation_results_night <- replicate(n = 10000,
                          )) %>% t()
 
 
-simulation_results_day[,1] %>% mean()
-simulation_results_night[,1] %>% mean()
+mean_success_day <- simulation_results_day[,1] %>% mean()
+mean_success_night <- simulation_results_night[,1] %>% mean()
 
+cat("The mean success rate for calling during the day is: ", mean_success_day*100,"% \n")
+cat("The mean success rate for calling during the night is: ", mean_success_night*100,"% \n")
 
 ```
 
+This is an interesting result in my opinion. We can see that when looking at the call resolution time of a single operator, the day shift staff are clearly superior. When considering the First available times, the time you would wait to reach the first available operator is more comparable between the two shifts however there is the possibility that you can wait up to 12 minutes when phoning at night. The night shift is heavier tailed than the day shift.
+
+An important element to remember is that once you have reached the first available operator, they must still resolve your issue. Due to the huge discrepancy in success rates, it can be theorised that under the budget of R50, the additional time that you need to resolve your issue means that the superior efficiency per call operator during the day outweighs the cheaper phone rates during the night.
+
+Although your chances are approximately doubled when phoning during the day, the overall success rate is quite low. 
+
+How much money would you need to budget for in order to guarantee that your issue will be resolved?
+
+# Money,Money,Money!
+
+I consider a range of budgets starting from R0 up until R700. I calculate the mean success rate for budgets within this range. A useful package that I used for this is `furrr`. This allows you to easily run `purrr` functions like `map()` in parallel. I highly recommend checking this out as it is incredibly simple to use.
+
+```{r, echo = FALSE, message =FALSE}
+library(furrr)
+
+repeated_simulation_day <- function(budget){
+  #Conduct Day Simulation with hyperparameters 10000 times and calculate success rate
+  #For a given budget
+  replicate(n = 10000,
+         expr = call_scenario(num = num_day,
+                              rate = day_rate,
+                              budget = budget,
+                              call_cost = call_cost_day
+                         )) %>% t() %>% .[,1] %>% mean()
+}
+
+repeated_simulation_night <- function(budget){
+  replicate(n = 10000,
+         expr = call_scenario(num = num_night,
+                              rate = night_rate,
+                              budget = budget,
+                              period = 1,
+                              call_cost = call_cost_night
+                         )) %>% t() %>% .[,1] %>% mean()
+}
+
+budget_range <- seq(0,700,length.out = 21)
+
+day_budget_range <- furrr::future_map(.x = budget_range,.f = repeated_simulation_day) %>% unlist()
+
+night_budget_range <- furrr::future_map(.x = budget_range,.f = repeated_simulation_night) %>% unlist()
+
+plot(x = budget_range , y = day_budget_range , col = "blue" , type = "l", xlab ="Phone Budget", ylab = "Mean Success Rate", main = "How Much Money Do I need to spend?")
+lines(x = budget_range, y = night_budget_range , col = "red")
+legend("bottomright", c("Calling during Day","Calling During Night"), col = c("blue","red"), lty = 1)
+
+```
+
+The results show that calling during the day approaches the asymptotic 100% success rate much faster than during the night. In order to achieve at least a 90% mean success rate, you would need to allocate on average R250 when calling during the day, but you would need to allocate R490 during the night in order to achieve the same mean success rate!
+
+Unfortunately, it looks like my budget of R50 will be no good...
 
 
+# Main Ideas
+
+This post has shown how one can create a simulation environment in order to ask specific questions. Sometimes one can figure out key elements analytically, but there is always simulation to help you find out the things you need to know.
+
+The code is available on my GitHub so feel free to play around with the hyperparameters or use this as a basis for another scenario.
+
+Thanks for reading!
 
 
-
-
-<!-- This isn't that interesting. What we want is to develop the **optimal** calling strategy here. An added complication is that the proportion of successful calling scenarios is a stochastic output. The same strategy will output different success rates. -->
-
-<!-- To illustrate this stochastic nature, the usual optim() function shall be used to find the optimal calling proportion strategy for the scenario above. This solution shall be solved 1000 times. -->
-
-
-
-<!-- ```{r loss_function, eval = FALSE} -->
-<!-- #Define a loss function to output success rate  -->
-
-
-<!-- loss_fn <- function(prop_day_budget, -->
-<!--                     sim_iterations = 1000, -->
-<!--                     num_day, -->
-<!--                     day_rate, -->
-<!--                     num_night, -->
-<!--                     night_rate, -->
-<!--                     total_budget -->
-<!--                                 ){ -->
-
-
-
-<!--   simulation_results <-     replicate(n = sim_iterations, -->
-<!--                                       expr = call_scenario( -->
-<!--                                                       num_day, -->
-<!--                                                       day_rate, -->
-<!--                                                       num_night, -->
-<!--                                                       night_rate, -->
-<!--                                                       total_budget -->
-<!--                                                       ) -->
-<!--                                       ) %>% t() -->
-
-<!--   return(mean(simulation_results[,1])) -->
-
-<!-- } -->
-
-
-<!-- # loss_fn(prop_day_budget = 0.25, -->
-<!-- #                     num_day = 6, -->
-<!-- #                     day_rate = 1/10, -->
-<!-- #                     num_night = 1/15, -->
-<!-- #                     night_rate = 3, -->
-<!-- #                     total_budget = 50) -->
-
-
-<!-- solution <- c() -->
-<!-- solution_success <- c() -->
-
-<!-- for(i in 1:500){ -->
-
-<!--   non_stochastic_optim <- optim(par = 0.5, -->
-<!--                               lower = 0, -->
-<!--                               upper = 1, -->
-<!--                                 fn = loss_fn, -->
-<!--                                 num_day = 6, -->
-<!--                                 day_rate = 1/10, -->
-<!--                                 num_night = 15, -->
-<!--                                 night_rate = 1/30, -->
-<!--                                 total_budget = 50, -->
-<!--                               method = "Brent") -->
-
-<!--   solution[i] <- non_stochastic_optim$par -->
-<!--   solution_success[i] <- non_stochastic_optim$value -->
-
-<!-- } -->
-
-<!-- plot(density(solution),xlab ="Optimal Prop Day Time Calling Solution", main ="Solving the problem with optim 100 Times") -->
-
-<!-- plot(density(solution_success), main = "Distribution of Strategy Success Rates")         -->
-
-
-<!-- plot(x = solution , y = solution_success, main = "Optimal Prop vs Solution Success Achieved") -->
-
-<!-- ``` -->
-
-<!-- It can be seen that the loss function output is a Gaussian random variable. However, the hyperparameter, the proportion of the budget to spend during the day, appears to be a Gaussian mixture distribution -->
