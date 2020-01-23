@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PAM on Jack of All Data, Master of Some</title>
+    <link>/tags/pam/</link>
+    <description>Recent content in PAM on Jack of All Data, Master of Some</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 23 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/pam/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Everything for Every Occasion</title>
+      <link>/post/everything-for-every-occasion/</link>
+      <pubDate>Thu, 23 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/everything-for-every-occasion/</guid>
+      <description>Clustering of similar product items can help decision makers strategically plan product mixes which can affect overall business strategy. In this post, I go over how to group similar products together using data from an online events retailer.
+The Technical GistDon’t “blindly” standardize/normalize features without thinking about what you are actually trying to convey with each feature. Sometimes it makes more sense to normalize row-wise.
+If you value interpretability of clusters over all else, the features you engineer must make sense and come from hypotheses that you have formed from looking at the data.</description>
+    </item>
+    
+  </channel>
+</rss>
