@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Everything for Every Occasion - Jack of All Data, Master of Some</title>
+  <title>Something for Every Occasion - Jack of All Data, Master of Some</title>
   <meta name="description" content="Interpretable Clustering of Retail data using PAM">
   <meta name="author" content="Sean"/><script type="application/ld+json">
 {
@@ -45,7 +45,7 @@
         "position": 3,
         "item": {
           "@id": "\/post\/everything-for-every-occasion\/",
-          "name": "Everything for every occasion"
+          "name": "Something for every occasion"
         }
     }]
 }
@@ -56,10 +56,10 @@
   "author": {
     "name" : "Sean"
   },
-  "headline": "Everything for Every Occasion",
+  "headline": "Something for Every Occasion",
   "description" : "Clustering of similar product items can help decision makers strategically plan product mixes which can affect overall business strategy. In this post, I go over how to group similar products together using data from an online events retailer.\nThe Technical Gist\r\rDon’t “blindly” standardize\/normalize features without thinking about what you are actually trying to convey with each feature. Sometimes it makes more sense to normalize row-wise.\n\rIf you value interpretability of clusters over all else, the features you engineer must make sense and come from hypotheses that you have formed from looking at the data.",
   "inLanguage" : "en",
-  "wordCount":  5657 ,
+  "wordCount":  5656 ,
   "datePublished" : "2020-01-23T00:00:00",
   "dateModified" : "2020-01-23T00:00:00",
   "image" : "\/img\/spiral_logo.png",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Everything for Every Occasion" />
+<meta property="og:title" content="Something for Every Occasion" />
 <meta property="og:description" content="Interpretable Clustering of Retail data using PAM">
 <meta property="og:image" content="/img/spiral_logo.png" />
 <meta property="og:url" content="/post/everything-for-every-occasion/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Jack of All Data, Master of Some" />
 
-  <meta name="twitter:title" content="Everything for Every Occasion" />
+  <meta name="twitter:title" content="Something for Every Occasion" />
   <meta name="twitter:description" content="Interpretable Clustering of Retail data using PAM">
   <meta name="twitter:image" content="/img/spiral_logo.png" />
   <meta name="twitter:card" content="summary" />
@@ -234,7 +234,7 @@
           <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
               <div class="post-heading">
-                <h1>Everything for Every Occasion</h1>
+                <h1>Something for Every Occasion</h1>
                   
                     
                       <h2 class="post-subheading">Interpretable Clustering of Retail data using PAM</h2>
@@ -273,7 +273,7 @@
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Everything for Every Occasion</h1>
+                <h1>Something for Every Occasion</h1>
               
               
               
@@ -443,7 +443,6 @@ The median should be used as it is more robust to outliers.</p>
 <blockquote>
 <p>In my opinion, it is important to have a principled reason for creating a feature and to not over-engineer some nonsense feature that has no meaning.</p>
 </blockquote>
-<p>(I will touch on this again later, but the tendency of the median to better reflect the average of the various features of the item data will affect which clustering algorithm I will use. See: )</p>
 <p>This is even more clear when we consider the <code>Quantity</code> distribution of each unique item bought in a transaction. Consider the quantiles below where each numeric value is the <code>Quantity</code> bought.</p>
 <pre class="r"><code>#Print Out Deciles Of Quantity Bought of Each Item
 quantile(retail$Quantity,probs = seq(0,1,length.out = 21))</code></pre>
@@ -479,21 +478,23 @@ quantile(retail$Quantity,probs = seq(0,1,length.out = 21))</code></pre>
 <p>Feature engineering is a fancy term for describing the process of creating new useful variables which will help in achieving your modelling goal. Explicitly creating features has the advantage over other methods such as the <a href="https://en.wikipedia.org/wiki/Feature_learning">representation learning</a> approach of neural networks in that they tend to be understandable.</p>
 <p>The features that I have decided to create from the sales data for each item is:</p>
 <ul>
-<li><p>Normalized Median Quantity sold –&gt; <em>CONTINUOUS</em></p>
+<li>Normalized Median Quantity sold –&gt; <em>CONTINUOUS</em>
 <ul>
 <li>Median was deemed to be a better reflection of the average than the mean from the boxplot. This quantity was normalised such that the minimum median quantity has the value 0 and the maximum has the value 1.</li>
 </ul></li>
-<li><p>Proportion of each <strong>item’s</strong> total revenue sold in each country –&gt; <em>CONTINUOUS</em></p>
+<li>Proportion of each <strong>item’s</strong> total revenue sold in each country –&gt; <em>CONTINUOUS</em>
 <ul>
 <li>There are 40 unique countries in the data set. I suspect that nuances in the relative proportions between item’s is informative.</li>
 </ul></li>
-<li><p>Normalized max quantity of the item bought across all transactions –&gt; <em>CONTINUOUS</em></p></li>
-<li><p>Initially I used a binary variable which took on the value 1 if an item was bought for more than 32 units in a transaction. This created a problem when calculating the distances as this feature dominated the clustering. Two distinct clusters where formed around this binary variable with little variation within those clusters. I desired a more nuanced clustering of the items which depends on all of the features that I have created. The normalized max quantity allowed for this.</p></li>
-<li><p>Prevalence rate of an item in all transactions –&gt; <em>CONTINUOUS</em></p>
+<li>Normalized max quantity of the item bought across all transactions –&gt; <em>CONTINUOUS</em>
+<ul>
+<li>Initially I used a binary variable which took on the value 1 if an item was bought for more than 32 units in a transaction. This created a problem when calculating the distances as this feature dominated the clustering. Two distinct clusters where formed around this binary variable with little variation within those clusters. I desired a more nuanced clustering of the items which depends on all of the features that I have created. The normalized max quantity allowed for this.</li>
+</ul></li>
+<li>Prevalence rate of an item in all transactions –&gt; <em>CONTINUOUS</em>
 <ul>
 <li>This is used as a proxy to determine how popular an item is or how quickly it moves. This feature tries to estimate the <strong>probability</strong> of a given item being present in any arbitrary transaction. This is different from median quantity in that this feature does not speak to how many units are bought in a transaction.</li>
 </ul></li>
-<li><p>Normalized Price in Pounds Sterling of the item –&gt; <em>CONTINUOUS</em></p></li>
+<li>Normalized Price in Pounds Sterling of the item –&gt; <em>CONTINUOUS</em></li>
 </ul>
 <p>One might wonder as to why I did not include total revenue as a feature. Total revenue is acting through the prevalence rate, median quantity and price. Total revenue may also produce biased results as a given item may not be sold in all regions or this item was only introduced mid-way through the year.</p>
 <div id="normalization-or-standardization-of-features" class="section level3">
@@ -735,7 +736,8 @@ apply(as.matrix(item_performance_dist),
 <p>Consider the <strong>distance</strong> <span class="math inline">\(d_{x,y}\)</span> between two objects X and Y. The mutual proximity is defined as <span class="math inline">\(M P\left(d_{x, y}\right)=P\left(X&gt;d_{x, y} \cap Y&gt;d_{y, x}\right)\)</span>. Mutual proximity attempts to fix the violation of pairwise stability mentioned earlier by calculating the joint probability of seeing a distance <strong>greater</strong> than what was observed in the data.</p>
 <p>This method will naturally scale distances along the probability range in [0;1]. Approximate methods were used to estimate the Mutual Proximity quantities in order to ensure scalability of this process.
 The authors show that assuming independence in calculating MP values did not drastically affect outcomes.</p>
-<p>Therefore, I calculated <span class="math inline">\(M P\left(d_{x, y}\right)=P\left(X&gt;d_{x, y} \cap Y&gt;d_{y, x}\right) \\ = P\left(X&gt;d_{x, y}\right) P\left(Y&gt;d_{y, x}\right)\)</span></p>
+<p>Therefore, I calculated:</p>
+<p><span class="math inline">\(M P\left(d_{x, y}\right)=P\left(X&gt;d_{x, y} \cap Y&gt;d_{y, x}\right)= P\left(X&gt;d_{x, y}\right) P\left(Y&gt;d_{y, x}\right)\)</span></p>
 <p>This greatly speeds up calculations as only the <em>marginal</em> distance density distributions needs to be calculated <strong>for each item</strong>. Distances are random variables which range from [0;+Inf]. The Gamma distribution is suggested by the authors and this distribution provided an adequate fit from what I saw in the marginal distance distributions.</p>
 <p>I have written the <code>global_scaling_mp</code> function below which accepts any numeric, square distance matrix and returns the MP scaled distance matrix. If <code>diss=TRUE</code>, then a <strong>dissimilarity/distance</strong> matrix is returned otherwise a <strong>similarity</strong> matrix is returned.</p>
 <p>I haven’t paralellised the inner loop. It runs fast enough as is for my purpose here. It would be quite easy to improve speed for larger data sets by making using of the <code>furrr::future_map()</code> function.</p>
@@ -813,7 +815,6 @@ mp_item_distance_mat &lt;- global_scaling_mp(as.matrix(item_performance_dist), r
 <p>Concentration is the tendency for objects in a high dimensional space to be at almost the same distance away from every other point.</p>
 </blockquote>
 <p>The positive skewness of the k-neighbourhood distances has decreased dramatically after scaling the data. This shows that this method has succeeded in reducing the number of hub points in the data. The overall distribution of distances is also more desirable as there are far fewer points with distances close to 0. This means that there are fewer points that are “on top” of each other.</p>
-<p><strong>One can say that the 0.42 MP scaled distance between the sharpener and pencil represents as 58% similarity match!</strong></p>
 <p>One major advantage with using Mutual Proximity is that the distances between items are interpretable. Consider the MP scaled distances between the Robot Pencil Sharpener and these two other products:</p>
 <table>
 <thead>
@@ -878,9 +879,7 @@ num_clusters_test &lt;-
     min.nc = 2,
     max.nc = 8,
     index = &quot;all&quot;
-  )
-
-saveRDS(num_clusters_test,&quot;num_clusters_test.rds&quot;)</code></pre>
+  )</code></pre>
 <pre class="r"><code># Visualise conclusions of each test
 factoextra::fviz_nbclust(num_clusters_test)</code></pre>
 <pre><code>## Among all indices: 
@@ -895,7 +894,7 @@ factoextra::fviz_nbclust(num_clusters_test)</code></pre>
 ## Conclusion
 ## =========================
 ## * According to the majority rule, the best number of clusters is  6 .</code></pre>
-<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Majority of the tests suggest a total of 6 clusters is optimal. A PAM model is trained below.</p>
 <pre class="r"><code>#Train the model according to the MP scaled distance matrix
 pam_cluster &lt;- cluster::pam(k = 6,
@@ -906,7 +905,7 @@ item_performance$Cluster &lt;- pam_cluster$clustering</code></pre>
 </div>
 <div id="visualization-of-clusters" class="section level2">
 <h2>Visualization of Clusters</h2>
-<p>The trimmed dataframe with the features that were engineered earlier contain a total of <code>ncol(item_performance) - 1</code> features. In order to visualise the groups/clusters of product items, the distances between them have to be visualised on a 2D or 3D plane.</p>
+<p>The trimmed dataframe with the features that were engineered earlier contain a total of 17 features. In order to visualise the groups/clusters of product items, the distances between them have to be visualised on a 2D or 3D plane.</p>
 <p>I adopted to use the non-metric Kruskal’s Multidimensional Scaling method. Multidimensional scaling attempts to reduce a high dimensional input space and present items on a much lower dimensional output space with minimal information between the items being lost.</p>
 <p>Non-metric means that the algorithm does not try to preserve the exact metric distances (Euclidean in this case) between items on this 2D plane, but instead it preserves the <em>ranking</em> of distances between items. The closest item to product A in the input space should still be the closest item in the output space, but the magnitude of the distance is not guaranteed to be preserved.</p>
 <p>For comparison, I have created the 2D visualisation output space of the distances between items before and after Mutual Proximity scaling below.</p>
@@ -959,7 +958,7 @@ mds_points_all %&gt;%
 <p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/mds_plot-1.png" width="1152" /></p>
 <p>It can be seen that scaling the distances by using Mutual Proximity allows for a tighter clustering of points. This allows a partitioning clustering algorithm like PAM to easily partition the items into different groups or clusters.</p>
 <p>I question the utility of having clusters 2 and 3 as separate groups in the MP scaled clustering. I suspect it is due to the collection of noisy items which stray further away from the characteristic swirl in the MP scaled plot. In reducing the overall average distance from each item to it’s cluster’s medoid, the outlier items seem to benefit in having two cluster medoids close to each other.</p>
-<p>Other methods such as DBSCAN allows for the clustering of items as noise points. These items do not form part of any cluster. In my personal opinion, this method is quite sensitive to the hyperparameters and thus it requires a lot of tuning. PAM seems to do a good enough job for the vast majority of items and thus it will be sufficient in giving us a good overall idea of the relationships between items.</p>
+<p>Other methods such as DBSCAN allow for the clustering of items as noise points. These items do not form part of any cluster. In my personal opinion, this method is quite sensitive to the hyperparameters and thus it requires a lot of tuning. PAM seems to do a good enough job for the vast majority of items and thus it will be sufficient in giving us a good overall idea of the relationships between items.</p>
 <p>For the sake of easier inference with slightly lower quality of cluster partitions, I merged cluster 3 into cluster 2.</p>
 </div>
 </div>
@@ -972,10 +971,10 @@ color_sample_reduced &lt;- brewer.pal(n = 5, name = &quot;Set2&quot;)
 mds_scaled_reduced &lt;- mds_fit_mp$points %&gt;% 
   as_tibble() %&gt;% 
   mutate(Cluster = as.factor(pam_cluster_reduced$clustering),
-         `Global Scaling` = TRUE)
-
-
-mds_medoids_scaled_reduced &lt;- mds_fit_mp$points[pam_cluster_reduced$medoids,] %&gt;% 
+         `Global Scaling` = TRUE)</code></pre>
+<pre><code>## Warning: `as_tibble.matrix()` requires a matrix with column names or a `.name_repair` argument. Using compatibility `.name_repair`.
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>mds_medoids_scaled_reduced &lt;- mds_fit_mp$points[pam_cluster_reduced$medoids,] %&gt;% 
   as_tibble() %&gt;% 
   mutate(Cluster = as.factor(1:5),
          `Global Scaling` = TRUE) 
@@ -993,7 +992,7 @@ mds_scaled_reduced %&gt;%
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         text = element_text(size = 15))</code></pre>
-<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>Each cluster has a representative item, called the medoid, which characterises the median behaviour of the cluster in a sense. The attributes of these medoids are analysed below to see if there are meaningful differences from a business point of view between clusters.</p>
 <pre class="r"><code># Grab the representative medoid product items for each cluster
 
@@ -1024,7 +1023,7 @@ cluster_medoid_attributes %&gt;%
   scale_fill_manual(values = brewer.pal(n = 5, name = &quot;Set2&quot;)) +
   labs(y = &quot;% Of Cluster Medoid&#39;s Revenue per Region&quot;,title = &quot;Popularity of Cluster Medoids per Region&quot;) + 
   facet_wrap(~Region,nrow = 3 , ncol = 4)</code></pre>
-<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <pre class="r"><code>#Produce Table of Medoid Item Characteristics
 cluster_medoid_attributes %&gt;% 
   select(Cluster:prevalence_rate_percent) %&gt;% 
@@ -1105,7 +1104,7 @@ cluster_medoid_attributes %&gt;%
 <li>Very low value items that are estimated to have the highest bulk purchase potential. Dominantly sold in the UK, but do have appeal to wholesalers in Germany and EIRE.</li>
 </ul></li>
 </ul>
-<p>Note: Yes the names are terrible, but I could’ve honestly ploughed in many hours trying to come up with better ones. I had to call it quits</p>
+<p>Note: Yes the names are terrible, but I could’ve honestly ploughed in many hours trying to come up with better ones. I had to call it quits eventually.</p>
 <p>Finally, I have plotted the total monthly sales of each cluster over time.</p>
 <pre class="r"><code>item_performance %&gt;% 
   select(StockCode,Cluster) %&gt;% 
@@ -1124,8 +1123,9 @@ cluster_medoid_attributes %&gt;%
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90))</code></pre>
 <pre><code>## Joining, by = &quot;StockCode&quot;</code></pre>
-<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>A limited view of the sales is present but the “bulk” clusters 3 and 5 peak especially in November with a dramatic drop off in December. This sort of analysis can help the retailer to plan which items to stock and when.</p>
+<p><img src="/post/2020-01-23-everything-for-every-occasion.en_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>A limited view of the sales is present but the “bulk” clusters 3 and 5 peak especially in November with a dramatic drop off in December. There also seems to be a significant uptake period a few months before when items in this cluster are bought in larger quantities than other months.</p>
+<p>This sort of time series analysis can help the retailer to plan which items to stock and when. I shall leave this for another time as this post is possibly too long already.</p>
 </div>
 <div id="closing-remarks" class="section level1">
 <h1>Closing Remarks</h1>
@@ -1137,8 +1137,10 @@ cluster_medoid_attributes %&gt;%
 <li><p>Product descriptions are available in the sales data. Vector representation of text descriptions can be used to calculate a measure such as cosine similarity between product description vectors that have been embedded in vector space using algorithms such as word2vec. The flexibility of Global Scaling allows for the linear addition of different distance spaces together so it could be interesting to add in this additional layer.</p></li>
 <li><p>Clusters here represent a static snapshot at the end of a time scale. Methods such as Growing Neural Gas are able to create nodes or clusters when necessary by some criterion. This could be useful in modelling evolving interaction behaviour between products.</p></li>
 <li><p>More work can be done in explaining which features drove the similarity measure (or probability) between items and the cluster ID. A supervised model could be fit to predict the PAM clustering IDs based off of the engineered features for the purpose of inference.</p></li>
-<li><p>More sophisticated Time Series analysis in order to identify more nuanced trends in sales in order to make suggestions on how to boost sales/ capitalise on opportunities.</p></li>
+<li><p>More sophisticated Time Series analysis in order to identify more nuanced trends in sales.</p></li>
 </ul>
+<p><strong>Thanks for reading :)</strong></p>
+<p><img src="https://media.giphy.com/media/3oEjHWXddcCOGZNmFO/giphy.gif" /></p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
@@ -1175,7 +1177,7 @@ cluster_medoid_attributes %&gt;%
     <ul class="share">
       
       <li>
-        <a href="//twitter.com/share?url=%2fpost%2feverything-for-every-occasion%2f&amp;text=Everything%20for%20Every%20Occasion&amp;via=" target="_blank" title="Share on Twitter">
+        <a href="//twitter.com/share?url=%2fpost%2feverything-for-every-occasion%2f&amp;text=Something%20for%20Every%20Occasion&amp;via=" target="_blank" title="Share on Twitter">
           <i class="fab fa-twitter"></i>
         </a>
       </li>
@@ -1189,28 +1191,28 @@ cluster_medoid_attributes %&gt;%
   
       
       <li>
-        <a href="//reddit.com/submit?url=%2fpost%2feverything-for-every-occasion%2f&amp;title=Everything%20for%20Every%20Occasion" target="_blank" title="Share on Reddit">
+        <a href="//reddit.com/submit?url=%2fpost%2feverything-for-every-occasion%2f&amp;title=Something%20for%20Every%20Occasion" target="_blank" title="Share on Reddit">
           <i class="fab fa-reddit"></i>
         </a>
       </li>
   
       
       <li>
-        <a href="//www.linkedin.com/shareArticle?url=%2fpost%2feverything-for-every-occasion%2f&amp;title=Everything%20for%20Every%20Occasion" target="_blank" title="Share on LinkedIn">
+        <a href="//www.linkedin.com/shareArticle?url=%2fpost%2feverything-for-every-occasion%2f&amp;title=Something%20for%20Every%20Occasion" target="_blank" title="Share on LinkedIn">
           <i class="fab fa-linkedin"></i>
         </a>
       </li>
   
       
       <li>
-        <a href="//www.stumbleupon.com/submit?url=%2fpost%2feverything-for-every-occasion%2f&amp;title=Everything%20for%20Every%20Occasion" target="_blank" title="Share on StumbleUpon">
+        <a href="//www.stumbleupon.com/submit?url=%2fpost%2feverything-for-every-occasion%2f&amp;title=Something%20for%20Every%20Occasion" target="_blank" title="Share on StumbleUpon">
           <i class="fab fa-stumbleupon"></i>
         </a>
       </li>
   
       
       <li>
-        <a href="//www.pinterest.com/pin/create/button/?url=%2fpost%2feverything-for-every-occasion%2f&amp;description=Everything%20for%20Every%20Occasion" target="_blank" title="Share on Pinterest">
+        <a href="//www.pinterest.com/pin/create/button/?url=%2fpost%2feverything-for-every-occasion%2f&amp;description=Something%20for%20Every%20Occasion" target="_blank" title="Share on Pinterest">
           <i class="fab fa-pinterest"></i>
         </a>
       </li>
