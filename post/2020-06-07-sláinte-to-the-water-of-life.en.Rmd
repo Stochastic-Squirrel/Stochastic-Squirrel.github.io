@@ -1,0 +1,30 @@
+---
+title: Sláinte! To The Water of Life
+author: Sean Soutar
+date: '2020-06-07'
+slug: sláinte-to-the-water-of-life
+categories: []
+tags:
+  - Shiny
+  - GLM
+type: ''
+subtitle: 'Launch of my website & my first deployed Shiny app'
+bigimg:
+- desc: Photo by Prem Sal Singh from Pexels
+  src: /img/whiskey.jpg
+---
+
+The word sláinte in Scottish Gaelic which means health. It is normally used in place of cheers. The word whiskey is actually a translation of a Gaelic phrase which means "water of life".
+
+Another thing associated with Scottish life is bagpipes. I am appreciative of the time I have spent here as I listen to the not-so-distant bagpipist hike up the same hill as me. This last year has exposed me to more cultures and ideas than what I ever thought was possible. 
+
+My way of honouring this time is my newly deployed Whiskey Dashboard. This dashboard displays my model which predicts the age of a single-malt whiskey based on its region of origin as well as its price. This dashboard primarily acts as an educational tool to explain some of the key aspects of GLM count models.
+
+I learnt a lot about the AWS cloud offerings in developing this project (EC2, Route 53 and so forth). Additionally, I have been improving my python development skills. The entire data scraping & processing script is in python, but the model was written in R with Stan.
+
+I plan to move my blog over to the stochasticsquirrel domain in the near future. For now, have a look at:
+https://shiny.stochasticsquirrel.net/whiskey_scraper/ 
+
+Feel free to reach out to me if you want to know more about what I did.
+
+:)

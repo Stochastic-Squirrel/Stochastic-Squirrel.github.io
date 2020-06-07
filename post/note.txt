@@ -1,0 +1,3 @@
+xx_new <- spaa::dist2list(as.dist(xx)) 
+
+https://www.statsandr.com/blog/how-to-embed-a-shiny-app-in-blogdown/
